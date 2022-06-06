@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 import environ
 
@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-t%acs2@fh)yg!$r70jc4836vua_$@svo*9$psekir=c9mj_e0n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['keep-playing.herokuapp.com']
 
 
 # Application definition
