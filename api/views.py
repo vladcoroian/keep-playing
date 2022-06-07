@@ -2,13 +2,14 @@ from .serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser
 from django.contrib.auth.models import User
 
+class HelloView(APIView):
+    def get(self, request):
+        content = {'message': 'Hello, World!'}
+        return Response(content)
 
 class UserRecordView(APIView):
-    permission_classes = [IsAdminUser]
-
     def get(self, format=None):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
