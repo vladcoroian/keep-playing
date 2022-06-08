@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 import environ
+import django_heroku
+import dj_database_url
+from decouple import config
 
 env = environ.Env()
 # reading .env file
@@ -80,16 +83,23 @@ WSGI_APPLICATION = 'keep_playing.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('POSTGRES_DB_NAME'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),
-        'PORT': env('POSTGRES_PORT'),
+if os.environ.get('DJANGO_DEVELOPMENT'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env('POSTGRES_DB_NAME'),
+            'USER': env('POSTGRES_USER'),
+            'PASSWORD': env('POSTGRES_PASSWORD'),
+            'HOST': env('POSTGRES_HOST'),
+            'PORT': env('POSTGRES_PORT'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config('DATABASE_URL')
+        )
+    }
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
