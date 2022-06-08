@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-
+from .models import Event
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -24,3 +24,15 @@ class UserSerializer(serializers.ModelSerializer):
                 fields=['username', 'email']
             )
         ]
+
+
+class EventSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        event = Event.objects.create(**validated_data)
+        return event
+
+    class Meta:
+        model = Event
+        fields = ['name']
+        validators = []
