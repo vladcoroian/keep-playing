@@ -6,6 +6,8 @@ on:
     branches:
       - master
 name: "Test"
+env:
+  DJANGO_TESTING: True
 jobs:
   build:
     runs-on: ubuntu-latest
