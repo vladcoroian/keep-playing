@@ -10,7 +10,9 @@ class TestEventModel(TestCase):
       location="", 
       details="",
       start_time=datetime.now().time(),
-      end_time=datetime.now().time()
+      end_time=datetime.now().time(),
+      coach=False,
+      price=0
     )
     self.event.save()
 
