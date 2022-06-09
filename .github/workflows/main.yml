@@ -6,8 +6,6 @@ on:
     branches:
       - master
 name: "Test"
-env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 jobs:
   build:
     runs-on: ubuntu-latest

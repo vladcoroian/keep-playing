@@ -94,6 +94,13 @@ if os.environ.get('DJANGO_DEVELOPMENT'):
             'PORT': env('POSTGRES_PORT'),
         }
     }
+elif sys.argv[1] == 'test':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 else:
     DATABASES = {
         'default': dj_database_url.config(
