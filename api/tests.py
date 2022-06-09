@@ -17,4 +17,4 @@ class TestEventModel(TestCase):
     self.event.save()
 
   def test_basic_event(self): 
-    self.assertEqual(Event.objects.count(), 1)
+    self.assertEqual(Event.objects.count(), 2)
