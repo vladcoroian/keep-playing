@@ -27,6 +27,20 @@ class EventView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    def delete(self, request, pk, format=None):
+        try: 
+            event = Event.objects.get(pk=pk) 
+            event.delete()
+        except Event.DoesNotExist: 
+            return Response(
+            {
+                "error": True,
+                "error_msg": "Event does not exist",
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        return Response({'message': 'Deleted'})
+
 class HelloView(APIView):
     def get(self, request):
         content = {'message': 'Hello, World!'}

@@ -8,4 +8,5 @@ urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
     path('hello/', views.HelloView.as_view(), name='hello'),
     path('events/', views.EventView.as_view(), name='events'),
+    path('events/<int:pk>/', views.EventView.as_view(), name='events'),
 ]
