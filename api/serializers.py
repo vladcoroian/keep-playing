@@ -34,5 +34,5 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['name', 'date', 'start_time', 'end_time']
+        fields = ['name', 'location', 'details','date', 'start_time', 'end_time', 'price']
         validators = []
