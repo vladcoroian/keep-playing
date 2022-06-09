@@ -7,7 +7,7 @@ on:
       - master
 name: "Test"
 env:
-  DATABASE_URL: {{ secrets.DATABASE_URL }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 jobs:
   build:
     runs-on: ubuntu-latest
