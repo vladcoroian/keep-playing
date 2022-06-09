@@ -94,7 +94,7 @@ if os.environ.get('DJANGO_DEVELOPMENT'):
             'PORT': env('POSTGRES_PORT'),
         }
     }
-elif env('DJANGO_TESTING'):
+elif env('DJANGO_TESTING') == True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
