@@ -41,6 +41,23 @@ class EventView(APIView):
         )
         return Response({'message': 'Deleted'})
 
+    def patch(self, request, pk, format=None):
+        try: 
+            event = Event.objects.get(pk=pk) 
+            serializer = EventSerializer(event, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+        except Event.DoesNotExist: 
+            return Response(
+            {
+                "error": True,
+                "error_msg": "Event does not exist",
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        return Response({'message': 'Updated'})
+
+
 class HelloView(APIView):
     def get(self, request):
         content = {'message': 'Hello, World!'}
