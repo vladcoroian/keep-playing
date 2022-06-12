@@ -15,7 +15,7 @@ class EventView(APIView):
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid(raise_exception=ValueError):
             event = serializer.create(validated_data=request.data)
-            request.data['pk'] = str(event.pk)
+            request.data['pk'] = event.pk
             return Response(
                 request.data,
                 status=status.HTTP_201_CREATED
