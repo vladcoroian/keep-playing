@@ -65,9 +65,8 @@ class EventView(APIView):
 
 
 class HelloView(APIView):
-    def get(self, request):
-        content = {'message': 'Hello, World!'}
-        return Response(content)
+    def get(self, request, format=None):
+        return Response("Hello {0}!".format(request.user))
 
 
 class UserRecordView(APIView):
