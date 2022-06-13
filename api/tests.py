@@ -11,6 +11,8 @@ class TestEventModel(TestCase):
       details="",
       start_time=datetime.now().time(),
       end_time=datetime.now().time(),
+      flexible_start_time=datetime.now().time(),
+      flexible_end_time=datetime.now().time(),
       coach=False,
       price=0
     )
