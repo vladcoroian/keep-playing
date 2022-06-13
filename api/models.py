@@ -8,5 +8,7 @@ class Event(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    flexible_start_time = models.TimeField()
+    flexible_end_time = models.TimeField()
     coach = models.BooleanField()
     price = models.IntegerField()

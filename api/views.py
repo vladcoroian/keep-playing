@@ -5,6 +5,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from .models import Event
 
+
 class EventView(APIView):
     def get(self, format=None):
         events = Event.objects.all()
@@ -29,40 +30,45 @@ class EventView(APIView):
         )
 
     def delete(self, request, pk, format=None):
-        try: 
-            event = Event.objects.get(pk=pk) 
+        try:
+            event = Event.objects.get(pk=pk)
             event.delete()
-        except Event.DoesNotExist: 
+        except Event.DoesNotExist:
             return Response(
-            {
-                "error": True,
-                "error_msg": "Event does not exist",
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
+                {
+                    "error": True,
+                    "error_msg": "Event does not exist",
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
         return Response({'message': 'Deleted'})
 
     def patch(self, request, pk, format=None):
-        try: 
-            event = Event.objects.get(pk=pk) 
-            serializer = EventSerializer(event, data=request.data, partial=True)
+        try:
+            event = Event.objects.get(pk=pk)
+            serializer = EventSerializer(
+                event, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-        except Event.DoesNotExist: 
+                return Response(
+                    request.data,
+                    status=status.HTTP_202_ACCEPTED
+                )
+        except Event.DoesNotExist:
             return Response(
-            {
-                "error": True,
-                "error_msg": "Event does not exist",
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
-        return Response({'message': 'Updated'})
+                {
+                    "error": True,
+                    "error_msg": "Event does not exist",
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class HelloView(APIView):
     def get(self, request):
         content = {'message': 'Hello, World!'}
         return Response(content)
+
 
 class UserRecordView(APIView):
     def get(self, format=None):

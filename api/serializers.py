@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from .models import Event
 
+
 class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -37,8 +38,13 @@ class EventSerializer(serializers.ModelSerializer):
         instance.location = validated_data.get('location', instance.location)
         instance.details = validated_data.get('details', instance.details)
         instance.date = validated_data.get('date', instance.date)
-        instance.start_time = validated_data.get('start_time', instance.start_time)
+        instance.start_time = validated_data.get(
+            'start_time', instance.start_time)
         instance.end_time = validated_data.get('end_time', instance.end_time)
+        instance.flexible_start_time = validated_data.get(
+            'flexible_start_time', instance.flexible_start_time)
+        instance.flexible_end_time = validated_data.get(
+            'flexible_end_time', instance.flexible_end_time)
         instance.coach = validated_data.get('coach', instance.coach)
         instance.price = validated_data.get('price', instance.price)
         instance.save()
@@ -46,5 +52,6 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['pk', 'name', 'location', 'details','date', 'start_time', 'end_time', 'price', 'coach']
+        fields = ['pk', 'name', 'location', 'details', 'date', 'start_time',
+                  'end_time', 'flexible_start_time', 'flexible_end_time', 'price', 'coach']
         validators = []
