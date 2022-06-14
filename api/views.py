@@ -50,10 +50,12 @@ class EventView(APIView):
             event = Event.objects.get(pk=pk)
             serializer = EventSerializer(
                 event, data=request.data, partial=True)
+            if (self.request.user.is_authenticated):
+                event.coach_user = self.request.user
             if serializer.is_valid():
                 serializer.save()
                 return Response(
-                    request.data,
+                    serializer.data,
                     status=status.HTTP_202_ACCEPTED
                 )
         except Event.DoesNotExist:
