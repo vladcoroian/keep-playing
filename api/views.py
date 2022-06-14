@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from .models import Event
+from rest_framework.authtoken.models import Token
 
 
 class EventView(APIView):
@@ -69,10 +70,16 @@ class HelloView(APIView):
         return Response("Hello {0}!".format(request.user))
 
 
-class UserRecordView(APIView):
+class UsersRecordView(APIView):
     def get(self, format=None):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+class UserRecordView(APIView):
+    def get(self, format=None):
+        user = self.request.user
+        serializer = UserSerializer(user, many=False)
         return Response(serializer.data)
 
     def post(self, request):
