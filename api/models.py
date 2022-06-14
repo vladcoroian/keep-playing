@@ -16,5 +16,5 @@ class Event(models.Model):
     coach = models.BooleanField()
     price = models.IntegerField()
     coach_user = models.ForeignKey(User, related_name='events', on_delete=models.DO_NOTHING, null=True, blank=True)
-    sport = models.CharField(max_length=50) 
-    role = models.CharField(max_length=50)
+    sport = models.CharField(max_length=50, null=True, blank=True) 
+    role = models.CharField(max_length=50, null=True, blank=True)
