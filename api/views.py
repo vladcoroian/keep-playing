@@ -1,3 +1,4 @@
+from urllib import response
 from .serializers import UserSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -80,7 +81,9 @@ class UserRecordView(APIView):
     def get(self, format=None):
         user = self.request.user
         serializer = UserSerializer(user, many=False)
-        return Response(serializer.data)
+        response = serializer.data
+        response['pk'] = user.pk
+        return Response(response)
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
