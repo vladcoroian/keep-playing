@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from .models import Event
+from .models import Event, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
+            'location',
             'email',
             'password',
         )

@@ -2,8 +2,8 @@ from .serializers import UserSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User
-from .models import Event
+# from django.contrib.auth.models import User
+from .models import Event, User
 from rest_framework.authtoken.models import Token
 
 
