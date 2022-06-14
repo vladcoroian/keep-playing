@@ -50,11 +50,25 @@ class EventSerializer(serializers.ModelSerializer):
         instance.coach = validated_data.get('coach', instance.coach)
         instance.coach_user = validated_data.get('coach_user', instance.coach_user)
         instance.price = validated_data.get('price', instance.price)
+        instance.sport = validated_data.get('sport', instance.sport)
+        instance.role = validated_data.get('role', instance.role)
         instance.save()
         return instance
 
     class Meta:
         model = Event
-        fields = ['pk', 'name', 'location', 'details', 'date', 'start_time',
-                  'end_time', 'flexible_start_time', 'flexible_end_time', 'price', 'coach', 'coach_user']
+        fields = ['pk', 
+                'name', 
+                'location', 
+                'details', 
+                'date', 
+                'start_time',
+                'end_time', 
+                'flexible_start_time', 
+                'flexible_end_time', 
+                'price', 
+                'coach', 
+                'coach_user',
+                'sport',
+                'role']
         validators = []
