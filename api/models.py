@@ -15,3 +15,4 @@ class Event(models.Model):
     flexible_end_time = models.TimeField()
     coach = models.BooleanField()
     price = models.IntegerField()
+    coach_user = models.ForeignKey(User, related_name='events', on_delete=models.DO_NOTHING, null=True)

@@ -47,6 +47,7 @@ class EventSerializer(serializers.ModelSerializer):
         instance.flexible_end_time = validated_data.get(
             'flexible_end_time', instance.flexible_end_time)
         instance.coach = validated_data.get('coach', instance.coach)
+        instance.coach_user = validated_data.get('coach_user', instance.coach_user)
         instance.price = validated_data.get('price', instance.price)
         instance.save()
         return instance
@@ -54,5 +55,5 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['pk', 'name', 'location', 'details', 'date', 'start_time',
-                  'end_time', 'flexible_start_time', 'flexible_end_time', 'price', 'coach']
+                  'end_time', 'flexible_start_time', 'flexible_end_time', 'price', 'coach', 'coach_user']
         validators = []
