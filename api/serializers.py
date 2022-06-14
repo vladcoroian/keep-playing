@@ -52,6 +52,7 @@ class EventSerializer(serializers.ModelSerializer):
         instance.price = validated_data.get('price', instance.price)
         instance.sport = validated_data.get('sport', instance.sport)
         instance.role = validated_data.get('role', instance.role)
+        instance.recurring = validaded_data.get('recurring', instance.recurring)
         instance.save()
         return instance
 
@@ -70,5 +71,6 @@ class EventSerializer(serializers.ModelSerializer):
                 'coach', 
                 'coach_user',
                 'sport',
-                'role']
+                'role',
+                'recurring']
         validators = []
