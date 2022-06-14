@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from urllib import response
 from .serializers import UserSerializer, EventSerializer
 from rest_framework.views import APIView
@@ -50,8 +51,31 @@ class EventView(APIView):
             event = Event.objects.get(pk=pk)
             serializer = EventSerializer(
                 event, data=request.data, partial=True)
-            if (self.request.user.is_authenticated):
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_202_ACCEPTED
+                )
+        except Event.DoesNotExist:
+            return Response(
+                {
+                    "error": True,
+                    "error_msg": "Event does not exist",
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+class CoachEventView(APIView):
+    def patch(self, request, pk, format=None):
+        try:
+            event = Event.objects.get(pk=pk)
+            serializer = EventSerializer(
+                event, data=request.data, partial=True)
+            if (self.request.data["coach"]):
                 event.coach_user = self.request.user
+            else:
+                event.coach_user = None
             if serializer.is_valid():
                 serializer.save()
                 return Response(
