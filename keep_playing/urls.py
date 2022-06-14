@@ -11,6 +11,7 @@ urlpatterns = [
     path('users/', views.UsersRecordView.as_view(), name='users'),
     path('user/', views.UserRecordView.as_view(), name='user'),
     path('events/<int:pk>/', views.EventView.as_view(), name='events'),
+    path('events/<int:pk>/coach', views.CoachEventView.as_view(), name='coach'),
     path('coach/<int:pk>/', views.CoachEventView.as_view(), name='coach'),
     path('login/', obtain_auth_token, name='login'),
 ]
