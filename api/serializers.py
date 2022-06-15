@@ -72,5 +72,6 @@ class EventSerializer(serializers.ModelSerializer):
                 'coach_user',
                 'sport',
                 'role',
-                'recurring']
+                'recurring',
+                'offers']
         validators = []
