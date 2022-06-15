@@ -19,3 +19,4 @@ class Event(models.Model):
     sport = models.CharField(max_length=50) 
     role = models.CharField(max_length=50)
     recurring = models.BooleanField(default=False)
+    offers = models.ManyToManyField(User, related_name='applied_events', blank=True)
