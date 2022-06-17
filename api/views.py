@@ -90,6 +90,29 @@ class AcceptOfferView(APIView):
             )
 
 
+class CoachCancelEventView(APIView):
+    def patch(self, request, pk, format=None):
+        try:
+            event = Event.objects.get(pk=pk)
+            serializer = EventSerializer(
+                event, data=request.data, partial=True)
+            event.coach = False
+            event.coach_user = None
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_202_ACCEPTED
+                )
+        except Event.DoesNotExist:
+            return Response(
+                {
+                    "error": True,
+                    "error_msg": "Event does not exist",
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 class CoachEventView(APIView):
     def get(self, request, pk, format=None):
         user = User.objects.get(pk=pk)
