@@ -2,7 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
+    is_organiser = models.BooleanField(default=False)
+    is_coach = models.BooleanField(default=False)
     location = models.CharField(max_length=100)
+
+class Organiser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
+class Coach(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
 class Event(models.Model):
     name = models.CharField(max_length=50)
