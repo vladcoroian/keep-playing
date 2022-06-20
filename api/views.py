@@ -122,7 +122,6 @@ class CoachEventView(APIView):
             status=status.HTTP_202_ACCEPTED
         )
 
-
     def patch(self, request, pk, format=None):
         try:
             event = Event.objects.get(pk=pk)
