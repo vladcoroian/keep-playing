@@ -15,5 +15,6 @@ urlpatterns = [
     path('events/<int:pk>/cancel/', views.CoachCancelEventView.as_view(), name='cancel'),
     path('events/<int:pk>/accept/<int:coach_pk>/', views.AcceptOfferView.as_view(), name='apply'),
     path('coach/<int:pk>/', views.CoachEventView.as_view(), name='coach'),
+    path('organiser/', views.OrganiserView.as_view(), name='organiser'),
     path('login/', obtain_auth_token, name='login'),
 ]

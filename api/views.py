@@ -1,6 +1,6 @@
 from contextlib import nullcontext
 from urllib import response
-from .serializers import UserSerializer, EventSerializer
+from .serializers import OrganiserSerializer, UserSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -180,3 +180,9 @@ class UserRecordView(APIView):
             },
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class OrganiserView(APIView):
+    def get(self, format=None):
+        user = self.request.user
+        serializer = OrganiserSerializer(user.organiser, many=False)
+        return Response(serializer.data)
