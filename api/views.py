@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 # from django.contrib.auth.models import User
-from .models import Event, User
+from .models import Event, Organiser, User
 from rest_framework.authtoken.models import Token
 
 
@@ -186,3 +186,21 @@ class OrganiserView(APIView):
         user = self.request.user
         serializer = OrganiserSerializer(user.organiser, many=False)
         return Response(serializer.data)
+
+    def patch(self, request, format=None):
+        organiser = self.request.user.organiser
+        serializer = OrganiserSerializer(
+            organiser, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+        return Response(
+                {
+                    "error": True,
+                    "error_msg": "Organiser does not exist",
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )

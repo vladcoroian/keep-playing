@@ -4,24 +4,6 @@ from rest_framework.validators import UniqueTogetherValidator
 from .models import Event, Organiser, User, Coach
 
 
-class OrganiserSerializer(serializers.ModelSerializer):
-    def update(self, instance, validated_data):
-        instance.favourites = validated_data.get('favourites', instance.favourites)
-        instance.blocked = validated_data.get('blocked', instance.blocked)
-
-    class Meta:
-        model = Organiser
-        fields = ['pk', 'favourites', 'blocked', 'user']
-        validators = []
-
-class CoachSerializer(serializers.ModelSerializer):
-    def update(self, instance, validated_data):
-        pass
-
-    class Meta:
-        model = Coach
-        fields = ['pk', 'user']
-        validators = []
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -96,3 +78,40 @@ class EventSerializer(serializers.ModelSerializer):
                 'recurring',
                 'offers']
         validators = []
+
+class OrganiserSerializer(serializers.ModelSerializer):
+    favourites_ids = serializers.PrimaryKeyRelatedField(
+        many=True, write_only=True, queryset=User.objects.all()
+    )
+    blocked_ids = serializers.PrimaryKeyRelatedField(
+        many=True, write_only=True, queryset=User.objects.all()
+    )
+
+    def create(self, validated_data):
+        organiser = Organiser.objects.create_user(**validated_data)
+        return organiser
+
+    def update(self, instance, validated_data):
+        favourites = validated_data.pop("favourites_ids", None)
+        if favourites:
+            instance.favourites.set(favourites)
+        blocked = validated_data.pop("blocked_ids", None)
+        if blocked:
+            instance.blocked.set(blocked)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Organiser
+        fields = ['pk', 'favourites', 'blocked', 'user', 'favourites_ids', 'blocked_ids']
+        validators = []
+
+class CoachSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        pass
+
+    class Meta:
+        model = Coach
+        fields = ['pk', 'user']
+        validators = []
+
