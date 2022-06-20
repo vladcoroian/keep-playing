@@ -16,5 +16,9 @@ urlpatterns = [
     path('events/<int:pk>/accept/<int:coach_pk>/', views.AcceptOfferView.as_view(), name='apply'),
     path('coach/<int:pk>/', views.CoachEventView.as_view(), name='coach'),
     path('organiser/', views.OrganiserView.as_view(), name='organiser'),
+    path('organiser/block/<int:coach_pk>/', views.OrganiserBlockCoach.as_view(), name='organiser_block'),
+    path('organiser/unblock/<int:coach_pk>/', views.OrganiserUnblockCoach.as_view(), name='organiser_unblock'),
+    path('organiser/add-favourite/<int:coach_pk>/', views.OrganiserAddFavouriteCoach.as_view(), name='organiser_add_favourite'),
+    path('organiser/remove-favourite/<int:coach_pk>/', views.OrganiserRemoveFavouriteCoach.as_view(), name='organiser_remove_favorite'),
     path('login/', obtain_auth_token, name='login'),
 ]

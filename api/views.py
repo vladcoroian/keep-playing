@@ -204,3 +204,43 @@ class OrganiserView(APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+class OrganiserBlockCoach(APIView):
+    def patch(self, request, coach_pk, format=None):
+        organiser = self.request.user.organiser
+        organiser.blocked.add(coach_pk)
+        serializer = OrganiserSerializer(organiser, many=False)
+        return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+
+class OrganiserUnblockCoach(APIView):
+    def patch(self, request, coach_pk, format=None):
+        organiser = self.request.user.organiser
+        organiser.blocked.remove(coach_pk)
+        serializer = OrganiserSerializer(organiser, many=False)
+        return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+
+class OrganiserAddFavouriteCoach(APIView):
+    def patch(self, request, coach_pk, format=None):
+        organiser = self.request.user.organiser
+        organiser.favourites.add(coach_pk)
+        serializer = OrganiserSerializer(organiser, many=False)
+        return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
+
+class OrganiserRemoveFavouriteCoach(APIView):
+    def patch(self, request, coach_pk, format=None):
+        organiser = self.request.user.organiser
+        organiser.favourites.remove(coach_pk)
+        serializer = OrganiserSerializer(organiser, many=False)
+        return Response(
+                serializer.data,
+                status=status.HTTP_202_ACCEPTED
+            )
