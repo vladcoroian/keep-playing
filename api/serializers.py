@@ -80,7 +80,6 @@ class EventSerializer(serializers.ModelSerializer):
                 'role',
                 'recurring',
                 'offers',
-                'organiser_user',
                 'organiser_user_id']
         validators = []
 
