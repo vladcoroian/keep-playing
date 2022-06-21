@@ -1,7 +1,8 @@
 # from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from .models import Event, User
+from .models import Event, Organiser, User, Coach
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,6 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
             'location',
             'email',
             'password',
+            'is_coach',
+            'is_organiser'
         )
         validators = [
             UniqueTogetherValidator(
@@ -30,6 +33,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    organiser_user_id = serializers.PrimaryKeyRelatedField(
+        many=False, write_only=True, queryset=User.objects.all()
+    )
 
     def create(self, validated_data):
         event = Event.objects.create(**validated_data)
@@ -73,5 +79,43 @@ class EventSerializer(serializers.ModelSerializer):
                 'sport',
                 'role',
                 'recurring',
-                'offers']
+                'offers',
+                'organiser_user_id']
         validators = []
+
+class OrganiserSerializer(serializers.ModelSerializer):
+    favourites_ids = serializers.PrimaryKeyRelatedField(
+        many=True, write_only=True, queryset=User.objects.all()
+    )
+    blocked_ids = serializers.PrimaryKeyRelatedField(
+        many=True, write_only=True, queryset=User.objects.all()
+    )
+
+    def create(self, validated_data):
+        organiser = Organiser.objects.create_user(**validated_data)
+        return organiser
+
+    def update(self, instance, validated_data):
+        favourites = validated_data.pop("favourites_ids", None)
+        if favourites:
+            instance.favourites.set(favourites)
+        blocked = validated_data.pop("blocked_ids", None)
+        if blocked:
+            instance.blocked.set(blocked)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Organiser
+        fields = ['pk', 'favourites', 'blocked', 'user', 'favourites_ids', 'blocked_ids']
+        validators = []
+
+class CoachSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        pass
+
+    class Meta:
+        model = Coach
+        fields = ['pk', 'user']
+        validators = []
+
