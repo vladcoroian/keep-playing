@@ -4,7 +4,6 @@ from .serializers import OrganiserSerializer, UserSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-# from django.contrib.auth.models import User
 from .models import Event, Organiser, User
 from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
