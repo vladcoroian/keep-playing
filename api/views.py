@@ -16,10 +16,12 @@ class EventView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        request.data['organiser_user_id'] = request.user.pk
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid(raise_exception=ValueError):
             event = serializer.create(validated_data=request.data)
             request.data['pk'] = event.pk
+            request.data.pop('organiser_user_id')
             return Response(
                 request.data,
                 status=status.HTTP_201_CREATED
@@ -98,6 +100,7 @@ class CoachCancelEventView(APIView):
                 event, data=request.data, partial=True)
             event.coach = False
             event.coach_user = None
+            event.offers.remove(self.request.user)
             if serializer.is_valid():
                 serializer.save()
                 return Response(

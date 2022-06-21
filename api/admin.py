@@ -26,7 +26,7 @@ class UserAdmin(DjangoUserAdmin):
 
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('name', 'location', 'date', 'sport', 'role', 'coach_user')
+    list_display = ('name', 'location', 'date', 'organiser_user', 'sport', 'role', 'coach_user')
 admin.site.register(Event, EventAdmin)
 
 admin.site.register(Coach)

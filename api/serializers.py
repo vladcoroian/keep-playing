@@ -33,6 +33,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    organiser_user_id = serializers.PrimaryKeyRelatedField(
+        many=False, write_only=True, queryset=User.objects.all()
+    )
 
     def create(self, validated_data):
         event = Event.objects.create(**validated_data)
@@ -56,6 +59,8 @@ class EventSerializer(serializers.ModelSerializer):
         instance.sport = validated_data.get('sport', instance.sport)
         instance.role = validated_data.get('role', instance.role)
         instance.recurring = validated_data.get('recurring', instance.recurring)
+        id = validated_data.pop("organiser_user_id", None)
+        instance.organiser_user = id
         instance.save()
         return instance
 
@@ -76,7 +81,8 @@ class EventSerializer(serializers.ModelSerializer):
                 'sport',
                 'role',
                 'recurring',
-                'offers']
+                'offers',
+                'organiser_user_id']
         validators = []
 
 class OrganiserSerializer(serializers.ModelSerializer):
