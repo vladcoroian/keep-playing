@@ -20,8 +20,10 @@ urlpatterns = [
     path('organiser/unblock/<int:coach_pk>/', views.OrganiserUnblockCoachView.as_view(), name='organiser_unblock'),
     path('organiser/add-favourite/<int:coach_pk>/', views.OrganiserAddFavouriteCoachView.as_view(), name='organiser_add_favourite'),
     path('organiser/remove-favourite/<int:coach_pk>/', views.OrganiserRemoveFavouriteCoachView.as_view(), name='organiser_remove_favorite'),
-    path('organiser-events/', views.OrganiserEventsView.as_view(), name='organiser_events'),
-    path('coach-feed/', views.CoachFeedView.as_view(), name='coach_feed'),
-    path('coach-upcoming-jobs/', views.CoachUpcomingJobsView.as_view(), name='coach_upcoming_jobs'),
+    path('organiser/events/', views.OrganiserEventsView.as_view(), name='organiser_events'),
+    path('coach/feed/', views.CoachFeedView.as_view(), name='coach_feed'),
+    path('coach/upcoming-jobs/', views.CoachUpcomingJobsView.as_view(), name='coach_upcoming_jobs'),
     path('login/', obtain_auth_token, name='login'),
 ]
+
+
