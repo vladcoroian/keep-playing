@@ -7,6 +7,7 @@ from rest_framework import status
 # from django.contrib.auth.models import User
 from .models import Event, Organiser, User
 from rest_framework.authtoken.models import Token
+from datetime import datetime, timedelta
 
 class EventView(APIView):
     def get(self, format=None):
@@ -246,18 +247,20 @@ class OrganiserRemoveFavouriteCoachView(APIView):
 
 class OrganiserEventsView(APIView):
     def get(self, request, format=None):
-        events = Event.objects.filter(organiser_user=request.user)
+        events = Event.objects.filter(organiser_user=request.user).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
 class CoachFeedView(APIView):
     def get(self, request, format=None):
-        events = Event.objects.all()
+        now = datetime.now()
+        events = Event.objects.filter(date__gte=now).filter(coach_user=None).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
 class CoachUpcomingJobsView(APIView):
     def get(self, request, format=None):
-        events = Event.objects.filter(coach_user=request.user)
+        now = datetime.now()
+        events = Event.objects.filter(coach_user=request.user).filter(date__gte=now).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
