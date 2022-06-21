@@ -59,8 +59,6 @@ class EventSerializer(serializers.ModelSerializer):
         instance.sport = validated_data.get('sport', instance.sport)
         instance.role = validated_data.get('role', instance.role)
         instance.recurring = validated_data.get('recurring', instance.recurring)
-        id = validated_data.pop("organiser_user_id", None)
-        instance.organiser_user = id
         instance.save()
         return instance
 
