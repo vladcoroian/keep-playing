@@ -30,3 +30,4 @@ class Event(models.Model):
     role = models.CharField(max_length=50)
     recurring = models.BooleanField(default=False)
     offers = models.ManyToManyField(User, related_name='applied_events', blank=True)
+    organiser_user = models.ForeignKey(User, related_name='organised_events', on_delete=models.CASCADE, null=False, blank=False)

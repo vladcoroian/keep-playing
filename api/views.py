@@ -8,7 +8,6 @@ from rest_framework import status
 from .models import Event, Organiser, User
 from rest_framework.authtoken.models import Token
 
-
 class EventView(APIView):
     def get(self, format=None):
         events = Event.objects.all()
@@ -205,7 +204,7 @@ class OrganiserView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-class OrganiserBlockCoach(APIView):
+class OrganiserBlockCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
         organiser = self.request.user.organiser
         organiser.blocked.add(coach_pk)
@@ -215,7 +214,7 @@ class OrganiserBlockCoach(APIView):
                 status=status.HTTP_202_ACCEPTED
             )
 
-class OrganiserUnblockCoach(APIView):
+class OrganiserUnblockCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
         organiser = self.request.user.organiser
         organiser.blocked.remove(coach_pk)
@@ -225,7 +224,7 @@ class OrganiserUnblockCoach(APIView):
                 status=status.HTTP_202_ACCEPTED
             )
 
-class OrganiserAddFavouriteCoach(APIView):
+class OrganiserAddFavouriteCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
         organiser = self.request.user.organiser
         organiser.favourites.add(coach_pk)
@@ -235,7 +234,7 @@ class OrganiserAddFavouriteCoach(APIView):
                 status=status.HTTP_202_ACCEPTED
             )
 
-class OrganiserRemoveFavouriteCoach(APIView):
+class OrganiserRemoveFavouriteCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
         organiser = self.request.user.organiser
         organiser.favourites.remove(coach_pk)
@@ -244,3 +243,21 @@ class OrganiserRemoveFavouriteCoach(APIView):
                 serializer.data,
                 status=status.HTTP_202_ACCEPTED
             )
+
+class OrganiserEventsView(APIView):
+    def get(self, request, format=None):
+        events = Event.objects.filter(organiser_user=request.user)
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
+
+class CoachFeedView(APIView):
+    def get(self, request, format=None):
+        events = Event.objects.all()
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
+
+class CoachUpcomingJobsView(APIView):
+    def get(self, request, format=None):
+        events = Event.objects.filter(coach_user=request.user)
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
