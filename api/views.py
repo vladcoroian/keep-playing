@@ -9,8 +9,8 @@ from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 
 class EventView(APIView):
-    def get(self, format=None):
-        events = Event.objects.all()
+    def get(self, request, format=None):
+        events = Event.objects.filter(organiser_user=request.user).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
