@@ -24,6 +24,15 @@ class EventView(APIView):
             event = serializer.create(validated_data=request.data)
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
+            for coach in request.user.organiser.favourites:
+                if coach.email in ['vladcoroian2001@gmail.com']:
+                    send_mail(
+                        'New Job Offer',
+                        'An organiser wants you to take a look at this opportunity.',
+                        'drp@keep_playing.com',
+                        [coach.email],
+                        fail_silently=False,
+                    )
             return Response(
                 request.data,
                 status=status.HTTP_201_CREATED
