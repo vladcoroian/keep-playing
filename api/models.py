@@ -33,3 +33,4 @@ class Event(models.Model):
     organiser_user = models.ForeignKey(User, related_name='organised_events', on_delete=models.CASCADE, null=False, blank=False)
     creation_started = models.DateTimeField(null=True, blank=True)
     creation_ended = models.DateTimeField(null=True, blank=True)
+    recurring_end_date = models.DateField(null=True, blank=True)
