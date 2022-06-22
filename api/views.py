@@ -1,5 +1,8 @@
 from contextlib import nullcontext
+import io
 from urllib import response
+
+from django.http import StreamingHttpResponse
 from .serializers import OrganiserSerializer, UserSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,7 +11,7 @@ from .models import Event, Organiser, User
 from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 from django.core.mail import send_mail
-
+from docx import Document
 
 class EventView(APIView):
     def get(self, request, format=None):
@@ -25,7 +28,7 @@ class EventView(APIView):
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
             for coach in request.user.organiser.favourites:
-                if coach.email in ['vladcoroian2001@gmail.com']:
+                if coach.email in ['vladcoroian2001@gmail.com', 'og519@ic.ac.uk']:
                     send_mail(
                         'New Job Offer',
                         'An organiser wants you to take a look at this opportunity.',
@@ -294,13 +297,44 @@ class CoachUpcomingJobsView(APIView):
         return Response(serializer.data)
 
 
-class SendEmailView(APIView):
-    def post(self, request, coach_pk, format=None):
-        send_mail(
-            'New Job Offer',
-            'An organiser wants you to take a look at this opportunity.',
-            'drp@keep_playing.com',
-            ['vladcoroian2001@gmail.com'],
-            fail_silently=False,
+
+class ExportDocx(APIView):
+    def build_document(self, event):
+        document = Document() 
+
+        # add a header
+        document.add_heading(f"INVOICE FOR {event.name}, on {event.date}\n")
+
+        # add a paragraph
+        document.add_paragraph("This is a normal style paragraph")
+
+        # add a paragraph within an italic text then go on with a break.
+        paragraph = document.add_paragraph()
+        run = paragraph.add_run()
+        run.italic = True
+        run.add_text("text will have italic style")
+        run.add_break()
+        
+        return document
+
+    def get(self, request, event_pk, *args, **kwargs):
+        # create an empty document object
+        event = Event.objects.get(pk=event_pk)
+        document = self.build_document(event)
+        # save document info
+        buffer = io.BytesIO()
+        document.save(buffer)  # save your memory stream
+        buffer.seek(0)  # rewind the stream
+
+        # put them to streaming content response 
+        # within docx content_type
+        response = StreamingHttpResponse(
+            streaming_content=buffer,  # use the stream's content
+            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         )
-        return Response({"message": "test2"})
+
+        response['Content-Disposition'] = 'attachment;filename=Invoice.docx'
+        response["Content-Encoding"] = 'UTF-8'
+
+        return response
+
