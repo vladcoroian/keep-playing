@@ -147,3 +147,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+
+EMAIL_HOST='smtp.mailgun.org'
+EMAIL_PORT='587'
+EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
+EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', '')

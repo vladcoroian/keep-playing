@@ -23,6 +23,7 @@ urlpatterns = [
     # path('organiser/events/', views.OrganiserEventsView.as_view(), name='organiser_events'),
     path('coach/feed/', views.CoachFeedView.as_view(), name='coach_feed'),
     path('coach/upcoming-jobs/', views.CoachUpcomingJobsView.as_view(), name='coach_upcoming_jobs'),
+    path('notify/<int:coach_pk>/', views.SendEmailView.as_view(), name='email'),
     path('login/', obtain_auth_token, name='login'),
 ]
 

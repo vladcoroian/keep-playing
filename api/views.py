@@ -7,6 +7,7 @@ from rest_framework import status
 from .models import Event, Organiser, User
 from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
+from django.core.mail import send_mail
 
 
 class EventView(APIView):
@@ -282,3 +283,15 @@ class CoachUpcomingJobsView(APIView):
             date__gte=now).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
+
+
+class SendEmailView(APIView):
+    def post(self, request, coach_pk, format=None):
+        send_mail(
+            'New Job Offer',
+            'An organiser wants you to take a look at this opportunity.',
+            'drp@keep_playing.com',
+            ['vladcoroian2001@gmail.com'],
+            fail_silently=False,
+        )
+        return Response({"message": "test2"})
