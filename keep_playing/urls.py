@@ -23,6 +23,8 @@ urlpatterns = [
     # path('organiser/events/', views.OrganiserEventsView.as_view(), name='organiser_events'),
     path('coach/feed/', views.CoachFeedView.as_view(), name='coach_feed'),
     path('coach/upcoming-jobs/', views.CoachUpcomingJobsView.as_view(), name='coach_upcoming_jobs'),
+    path('organiser/vote/<int:event_pk>/', views.VoteCoachView.as_view(), name='vote_coach'),
+    path('organiser/coach-model/<int:coach_pk>/', views.CoachModelView.as_view(), name='coach_model'),
     path('login/', obtain_auth_token, name='login'),
 ]
 
