@@ -85,7 +85,8 @@ class EventSerializer(serializers.ModelSerializer):
                 'offers',
                 'organiser_user_id',
                 'creation_started',
-                'creation_ended']
+                'creation_ended',
+                'voted']
         validators = []
 
 class OrganiserSerializer(serializers.ModelSerializer):
