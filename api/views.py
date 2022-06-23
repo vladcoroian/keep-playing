@@ -28,7 +28,7 @@ class EventView(APIView):
             event = serializer.create(validated_data=request.data)
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
-            for coach in request.user.organiser.favourites:
+            for coach in request.user.organiser.favourites.all():
                 if coach.email in approved_emails:
                     send_mail(
                         'New Job Offer',
