@@ -21,6 +21,7 @@ class Coach(models.Model):
     experience = models.IntegerField(default=0)
     flexibility = models.IntegerField(default=0)
     reliability = models.IntegerField(default=0)
+    qualification = models.ImageField(null=True, blank=True, upload_to="images/")
 
 class Event(models.Model):
     name = models.CharField(max_length=50)
@@ -43,3 +44,4 @@ class Event(models.Model):
     creation_ended = models.DateTimeField(null=True, blank=True)
     voted = models.BooleanField(default=False)
     recurring_end_date = models.DateField(null=True, blank=True)
+
