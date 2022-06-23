@@ -38,3 +38,4 @@ class Event(models.Model):
     creation_started = models.DateTimeField(null=True, blank=True)
     creation_ended = models.DateTimeField(null=True, blank=True)
     voted = models.BooleanField(default=False)
+    recurring_end_date = models.DateField(null=True, blank=True)
