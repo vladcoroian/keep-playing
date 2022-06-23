@@ -59,6 +59,8 @@ class EventSerializer(serializers.ModelSerializer):
         instance.sport = validated_data.get('sport', instance.sport)
         instance.role = validated_data.get('role', instance.role)
         instance.recurring = validated_data.get('recurring', instance.recurring)
+        instance.recurring_end_date = validated_data.get(
+            'recurring_end_date', instance.recurring_end_date)
         instance.save()
         return instance
 
@@ -79,6 +81,7 @@ class EventSerializer(serializers.ModelSerializer):
                 'sport',
                 'role',
                 'recurring',
+                'recurring_end_date',
                 'offers',
                 'organiser_user_id',
                 'creation_started',

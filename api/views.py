@@ -1,16 +1,21 @@
 from contextlib import nullcontext
+import io
 from urllib import response
 from .serializers import CoachSerializer, OrganiserSerializer, UserSerializer, EventSerializer
+from django.http import StreamingHttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Coach, Event, Organiser, User
 from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
+from django.core.mail import send_mail
+from docx import Document
 
 class EventView(APIView):
     def get(self, request, format=None):
-        events = Event.objects.filter(organiser_user=request.user).order_by('date')
+        events = Event.objects.filter(
+            organiser_user=request.user).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
@@ -21,6 +26,15 @@ class EventView(APIView):
             event = serializer.create(validated_data=request.data)
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
+            for coach in request.user.organiser.favourites:
+                if coach.email in ['vladcoroian2001@gmail.com', 'og519@ic.ac.uk']:
+                    send_mail(
+                        'New Job Offer',
+                        'An organiser wants you to take a look at this opportunity.',
+                        'drp@keep_playing.com',
+                        [coach.email],
+                        fail_silently=False,
+                    )
             return Response(
                 request.data,
                 status=status.HTTP_201_CREATED
@@ -115,6 +129,7 @@ class CoachCancelEventView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
 class CoachEventView(APIView):
     def get(self, request, pk, format=None):
         user = User.objects.get(pk=pk)
@@ -151,13 +166,12 @@ class HelloView(APIView):
         return Response("Hello {0}!".format(request.user))
 
 
-
-
 class UsersRecordView(APIView):
     def get(self, format=None):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
+
 
 class UserRecordView(APIView):
     def get(self, format=None):
@@ -183,6 +197,7 @@ class UserRecordView(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+
 class OrganiserView(APIView):
     def get(self, format=None):
         user = self.request.user
@@ -200,12 +215,13 @@ class OrganiserView(APIView):
                 status=status.HTTP_202_ACCEPTED
             )
         return Response(
-                {
-                    "error": True,
-                    "error_msg": "Organiser does not exist",
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            {
+                "error": True,
+                "error_msg": "Organiser does not exist",
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 class OrganiserBlockCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
@@ -213,9 +229,10 @@ class OrganiserBlockCoachView(APIView):
         organiser.blocked.add(coach_pk)
         serializer = OrganiserSerializer(organiser, many=False)
         return Response(
-                serializer.data,
-                status=status.HTTP_202_ACCEPTED
-            )
+            serializer.data,
+            status=status.HTTP_202_ACCEPTED
+        )
+
 
 class OrganiserUnblockCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
@@ -223,9 +240,10 @@ class OrganiserUnblockCoachView(APIView):
         organiser.blocked.remove(coach_pk)
         serializer = OrganiserSerializer(organiser, many=False)
         return Response(
-                serializer.data,
-                status=status.HTTP_202_ACCEPTED
-            )
+            serializer.data,
+            status=status.HTTP_202_ACCEPTED
+        )
+
 
 class OrganiserAddFavouriteCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
@@ -233,9 +251,10 @@ class OrganiserAddFavouriteCoachView(APIView):
         organiser.favourites.add(coach_pk)
         serializer = OrganiserSerializer(organiser, many=False)
         return Response(
-                serializer.data,
-                status=status.HTTP_202_ACCEPTED
-            )
+            serializer.data,
+            status=status.HTTP_202_ACCEPTED
+        )
+
 
 class OrganiserRemoveFavouriteCoachView(APIView):
     def patch(self, request, coach_pk, format=None):
@@ -243,30 +262,39 @@ class OrganiserRemoveFavouriteCoachView(APIView):
         organiser.favourites.remove(coach_pk)
         serializer = OrganiserSerializer(organiser, many=False)
         return Response(
-                serializer.data,
-                status=status.HTTP_202_ACCEPTED
-            )
+            serializer.data,
+            status=status.HTTP_202_ACCEPTED
+        )
+
 
 class OrganiserEventsView(APIView):
     def get(self, request, format=None):
-        events = Event.objects.filter(organiser_user=request.user).order_by('date')
+        events = Event.objects.filter(
+            organiser_user=request.user).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
+
 
 class CoachFeedView(APIView):
     def get(self, request, format=None):
         now = datetime.now()
-        events = Event.objects.filter(date__gte=now).filter(coach_user=None).order_by('date')
-        serializer = EventSerializer(events, many=True)
+        all_events = Event.objects.filter(date__gte=now, coach_user=None).order_by('date')
+        valid_events = []
+        for e in all_events:
+            if not e.organiser_user.organiser.blocked.contains(self.request.user):
+                valid_events.append(e)
+        serializer = EventSerializer(valid_events, many=True)
         return Response(serializer.data)
+
 
 class CoachUpcomingJobsView(APIView):
     def get(self, request, format=None):
         now = datetime.now()
-        events = Event.objects.filter(coach_user=request.user).filter(date__gte=now).order_by('date')
+        events = Event.objects.filter(coach_user=request.user).filter(
+            date__gte=now).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
-
+      
 class VoteCoachView(APIView):
     def patch(self, request, event_pk, format=None):
         event = Event.objects.get(pk=event_pk)
@@ -288,3 +316,43 @@ class CoachModelView(APIView):
         coach = user.coach
         serializer = CoachSerializer(coach, many=False)
         return Response(serializer.data)
+
+class ExportDocx(APIView):
+    def build_document(self, event):
+        document = Document() 
+
+        # add a header
+        document.add_heading(f"INVOICE FOR {event.name}, on {event.date}\n")
+
+        # add a paragraph
+        document.add_paragraph("This is a normal style paragraph")
+
+        # add a paragraph within an italic text then go on with a break.
+        paragraph = document.add_paragraph()
+        run = paragraph.add_run()
+        run.italic = True
+        run.add_text("text will have italic style")
+        run.add_break()
+        
+        return document
+
+    def get(self, request, event_pk, *args, **kwargs):
+        # create an empty document object
+        event = Event.objects.get(pk=event_pk)
+        document = self.build_document(event)
+        # save document info
+        buffer = io.BytesIO()
+        document.save(buffer)  # save your memory stream
+        buffer.seek(0)  # rewind the stream
+
+        # put them to streaming content response 
+        # within docx content_type
+        response = StreamingHttpResponse(
+            streaming_content=buffer,  # use the stream's content
+            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+
+        response['Content-Disposition'] = 'attachment;filename=Invoice.docx'
+        response["Content-Encoding"] = 'UTF-8'
+
+        return response
