@@ -39,6 +39,7 @@ class NewUserSerializer(serializers.ModelSerializer):
             password=validated_data['password'])
         user.qualification=validated_data['qualification']
         user.is_coach=True
+        user.is_active=False
         coach = Coach.objects.create(user=user)
         coach.save()
         user.save()
@@ -134,6 +135,7 @@ class OrganiserSerializer(serializers.ModelSerializer):
         instance.default_price = validated_data.get('default_price', instance.default_price)
         instance.default_sport = validated_data.get('default_sport', instance.default_sport)
         instance.default_role = validated_data.get('default_role', instance.default_role)
+        instance.default_location = validated_data.get('default_location', instance.default_location)
         instance.save()
         return instance
 
