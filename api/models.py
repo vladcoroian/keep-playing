@@ -5,6 +5,7 @@ class User(AbstractUser):
     is_organiser = models.BooleanField(default=False)
     is_coach = models.BooleanField(default=False)
     location = models.CharField(max_length=100)
+    qualification = models.ImageField(null=True, blank=True, upload_to="images/")
 
 class Organiser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -21,7 +22,6 @@ class Coach(models.Model):
     experience = models.IntegerField(default=0)
     flexibility = models.IntegerField(default=0)
     reliability = models.IntegerField(default=0)
-    qualification = models.ImageField(null=True, blank=True, upload_to="images/")
 
 class Event(models.Model):
     name = models.CharField(max_length=50)

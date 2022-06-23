@@ -28,6 +28,7 @@ urlpatterns = [
     path('coach/upcoming-jobs/', views.CoachUpcomingJobsView.as_view(), name='coach_upcoming_jobs'),
     path('organiser/vote/<int:event_pk>/', views.VoteCoachView.as_view(), name='vote_coach'),
     path('organiser/coach-model/<int:coach_pk>/', views.CoachModelView.as_view(), name='coach_model'),
+    # path('new_coach/', views.CreateUser.as_view(), name='new_coach'),
     path('login/', obtain_auth_token, name='login'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

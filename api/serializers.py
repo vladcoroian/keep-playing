@@ -8,7 +8,7 @@ from .models import Event, Organiser, User, Coach
 class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create(**validated_data)
         return user
 
     class Meta:
@@ -22,7 +22,8 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'is_coach',
-            'is_organiser'
+            'is_organiser',
+            # 'qualification'
         )
         validators = [
             UniqueTogetherValidator(
