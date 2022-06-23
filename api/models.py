@@ -5,6 +5,7 @@ class User(AbstractUser):
     is_organiser = models.BooleanField(default=False)
     is_coach = models.BooleanField(default=False)
     location = models.CharField(max_length=100)
+    qualification = models.ImageField(null=True, blank=True, upload_to="images/")
 
 class Organiser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -43,3 +44,4 @@ class Event(models.Model):
     creation_ended = models.DateTimeField(null=True, blank=True)
     voted = models.BooleanField(default=False)
     recurring_end_date = models.DateField(null=True, blank=True)
+
