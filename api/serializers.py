@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'is_coach',
             'is_organiser',
-            # 'qualification'
+            'qualification'
         )
         validators = [
             UniqueTogetherValidator(
