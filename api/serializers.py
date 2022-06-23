@@ -108,12 +108,24 @@ class OrganiserSerializer(serializers.ModelSerializer):
         blocked = validated_data.pop("blocked_ids", None)
         if blocked:
             instance.blocked.set(blocked)
+        instance.default_price = validated_data.get('default_price', instance.default_price)
+        instance.default_sport = validated_data.get('default_sport', instance.default_sport)
+        instance.default_role = validated_data.get('default_role', instance.default_role)
         instance.save()
         return instance
 
     class Meta:
         model = Organiser
-        fields = ['pk', 'favourites', 'blocked', 'user', 'favourites_ids', 'blocked_ids']
+        fields = ['pk', 
+            'favourites', 
+            'blocked', 
+            'user', 
+            'favourites_ids', 
+            'blocked_ids',
+            'default_location',
+            'default_price',
+            'default_sport',
+            'default_role']
         validators = []
 
 class CoachSerializer(serializers.ModelSerializer):
