@@ -311,7 +311,7 @@ class VoteCoachView(APIView):
         return Response(serializer.data)
 
 class CoachModelView(APIView):
-    def get(self, coach_pk, format=None):
+    def get(self, request, coach_pk, format=None):
         user = User.objects.get(pk=coach_pk)
         coach = user.coach
         serializer = CoachSerializer(coach, many=False)
