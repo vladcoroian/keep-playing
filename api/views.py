@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 from django.core.mail import send_mail
 from docx import Document
 
+approved_emails = ['vladcoroian2001@gmail.com', 'og519@ic.ac.uk', 'adiboroica235@gmail.com']
+
 class EventView(APIView):
     def get(self, request, format=None):
         events = Event.objects.filter(
@@ -27,7 +29,7 @@ class EventView(APIView):
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
             for coach in request.user.organiser.favourites:
-                if coach.email in ['vladcoroian2001@gmail.com', 'og519@ic.ac.uk']:
+                if coach.email in approved_emails:
                     send_mail(
                         'New Job Offer',
                         'An organiser wants you to take a look at this opportunity.',
@@ -89,6 +91,14 @@ class AcceptOfferView(APIView):
             serializer = EventSerializer(
                 event, data=request.data, partial=True)
             event.coach_user = User.objects.get(pk=coach_pk)
+            if event.coach_user.email in approved_emails:
+                send_mail(
+                    'Your offer has been accepted!',
+                    f'You have been accepted for {event.name}, on {event.date}. Open Keep Playing for more details.',
+                    'drp@keep_playing.com',
+                    [event.coach_user.email],
+                    fail_silently=False,
+                )
             if serializer.is_valid():
                 serializer.save()
                 return Response(
@@ -114,6 +124,16 @@ class CoachCancelEventView(APIView):
             event.coach = False
             event.coach_user = None
             event.offers.remove(self.request.user)
+            if event.organiser_user.email in approved_emails:
+                send_mail(
+                    f'A {event.role} has cancelled!',
+                    f'The {event.role} for {event.name}, on {event.date} has cancelled. ' + 
+                    'Don\'t worry! We have already triggered another search. ' + 
+                    'Open Keep Playing for more details.',
+                    'drp@keep_playing.com',
+                    [event.organiser_user.email],
+                    fail_silently=False,
+                )
             if serializer.is_valid():
                 serializer.save()
                 return Response(
@@ -145,6 +165,14 @@ class CoachEventView(APIView):
             serializer = EventSerializer(
                 event, data=request.data, partial=True)
             event.offers.add(request.user)
+            if event.organiser_user.email in approved_emails:
+                send_mail(
+                    f'Offer received for {event.name}, on {event.date}',
+                    'You received a new offer. Open application to view and accept it.',
+                    'drp@keep_playing.com',
+                    [event.organiser_user.email],
+                    fail_silently=False,
+                )
             if serializer.is_valid():
                 serializer.save()
                 return Response(
