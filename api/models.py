@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     is_organiser = models.BooleanField(default=False)
     is_coach = models.BooleanField(default=False)
-    location = models.CharField(max_length=100)
+    location = models.CharField(max_length=100, default='')
     qualification = models.ImageField(null=True, blank=True, upload_to="images/")
 
 class Organiser(models.Model):
