@@ -1,13 +1,12 @@
 from contextlib import nullcontext
 import io
 from urllib import response
-
+from .serializers import CoachSerializer, OrganiserSerializer, UserSerializer, EventSerializer
 from django.http import StreamingHttpResponse
-from .serializers import OrganiserSerializer, UserSerializer, EventSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Event, Organiser, User
+from .models import Coach, Event, Organiser, User
 from rest_framework.authtoken.models import Token
 from datetime import datetime, timedelta
 from django.core.mail import send_mail
@@ -295,8 +294,28 @@ class CoachUpcomingJobsView(APIView):
             date__gte=now).order_by('date')
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
+      
+class VoteCoachView(APIView):
+    def patch(self, request, event_pk, format=None):
+        event = Event.objects.get(pk=event_pk)
+        coach = event.coach_user.coach
+        if not event.voted:
+            event.voted = True
+            event.save()
+            coach.votes += 1
+            coach.experience += request.data["experience"]
+            coach.flexibility += request.data["flexibility"]
+            coach.reliability += request.data["reliability"]
+            coach.save()
+        serializer = CoachSerializer(coach, many=False)
+        return Response(serializer.data)
 
-
+class CoachModelView(APIView):
+    def get(self, coach_pk, format=None):
+        user = User.objects.get(pk=coach_pk)
+        coach = user.coach
+        serializer = CoachSerializer(coach, many=False)
+        return Response(serializer.data)
 
 class ExportDocx(APIView):
     def build_document(self, event):
@@ -337,4 +356,3 @@ class ExportDocx(APIView):
         response["Content-Encoding"] = 'UTF-8'
 
         return response
-

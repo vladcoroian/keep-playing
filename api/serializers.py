@@ -121,6 +121,6 @@ class CoachSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Coach
-        fields = ['pk', 'user']
+        fields = ['pk', 'user', 'votes', 'experience', 'flexibility', 'reliability']
         validators = []
 

@@ -13,6 +13,10 @@ class Organiser(models.Model):
 
 class Coach(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    votes = models.IntegerField(default=0)
+    experience = models.IntegerField(default=0)
+    flexibility = models.IntegerField(default=0)
+    reliability = models.IntegerField(default=0)
 
 class Event(models.Model):
     name = models.CharField(max_length=50)
@@ -33,4 +37,4 @@ class Event(models.Model):
     organiser_user = models.ForeignKey(User, related_name='organised_events', on_delete=models.CASCADE, null=False, blank=False)
     creation_started = models.DateTimeField(null=True, blank=True)
     creation_ended = models.DateTimeField(null=True, blank=True)
-    recurring_end_date = models.DateField(null=True, blank=True)
+    voted = models.BooleanField(default=False)
