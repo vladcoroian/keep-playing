@@ -32,6 +32,28 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ]
 
+class NewUserSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        user = User.objects.create_user(username=validated_data['username'], 
+            password=validated_data['password'])
+        user.qualification=validated_data['qualification']
+        user.is_coach=True
+        coach = Coach.objects.create(user=user)
+        coach.save()
+        user.save()
+        return user
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'username',
+            'password',
+            'qualification'
+        )
+        validators = []
+
 
 class EventSerializer(serializers.ModelSerializer):
     organiser_user_id = serializers.PrimaryKeyRelatedField(

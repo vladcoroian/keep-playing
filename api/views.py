@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 import io
 from urllib import response
-from .serializers import CoachSerializer, OrganiserSerializer, UserSerializer, EventSerializer
+from .serializers import CoachSerializer, NewUserSerializer, OrganiserSerializer, UserSerializer, EventSerializer
 from django.http import StreamingHttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -388,13 +388,10 @@ class ExportDocx(APIView):
 
 class CreateUser(APIView):
     def post(self, request, format=None):
-        serializer = UserSerializer(data=request.data)
+        serializer = NewUserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=ValueError):
             serializer.create(validated_data=request.data)
-            return Response(
-                request.data,
-                status=status.HTTP_201_CREATED
-            )
+            return Response({"message": "test"})
         return Response(
             {
                 "error": True,
