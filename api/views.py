@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 from django.core.mail import send_mail
 from docx import Document
 
+approved_emails = ['vladcoroian2001@gmail.com', 'og519@ic.ac.uk', 'adiboroica235@gmail.com']
+
 class EventView(APIView):
     def get(self, request, format=None):
         events = Event.objects.filter(
@@ -27,7 +29,7 @@ class EventView(APIView):
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
             for coach in request.user.organiser.favourites:
-                if coach.email in ['vladcoroian2001@gmail.com', 'og519@ic.ac.uk']:
+                if coach.email in approved_emails:
                     send_mail(
                         'New Job Offer',
                         'An organiser wants you to take a look at this opportunity.',
@@ -145,6 +147,14 @@ class CoachEventView(APIView):
             serializer = EventSerializer(
                 event, data=request.data, partial=True)
             event.offers.add(request.user)
+            if event.organiser_user.email in approved_emails:
+                send_mail(
+                    f'Offer received for {event.name}, on {event.date}',
+                    'You received a new offer. Open application to view and accept it.',
+                    'drp@keep_playing.com',
+                    [event.organiser_user.email],
+                    fail_silently=False,
+                )
             if serializer.is_valid():
                 serializer.save()
                 return Response(
