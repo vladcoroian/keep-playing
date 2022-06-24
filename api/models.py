@@ -6,6 +6,7 @@ class User(AbstractUser):
     is_coach = models.BooleanField(default=False)
     location = models.CharField(max_length=100, default='')
     qualification = models.ImageField(null=True, blank=True, upload_to="images/")
+    verified = models.BooleanField(default=False)
 
 class Organiser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

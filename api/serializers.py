@@ -23,7 +23,8 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'is_coach',
             'is_organiser',
-            'qualification'
+            'qualification',
+            'verified'
         )
         validators = [
             UniqueTogetherValidator(
@@ -39,7 +40,6 @@ class NewUserSerializer(serializers.ModelSerializer):
             password=validated_data['password'])
         user.qualification=validated_data['qualification']
         user.is_coach=True
-        user.is_active=False
         coach = Coach.objects.create(user=user)
         coach.save()
         user.save()
