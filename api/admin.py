@@ -18,7 +18,7 @@ class UserAdmin(DjangoUserAdmin):
             'Additional Fields', # you can also use None 
             {
                 'fields': (
-                    'location', 'is_organiser', 'is_coach', 'qualification'
+                    'location', 'is_organiser', 'is_coach', 'qualification', 'verified'
                 ),
             },
         ),
