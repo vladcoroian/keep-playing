@@ -26,13 +26,18 @@ class EventView(APIView):
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid(raise_exception=ValueError):
             event = serializer.create(validated_data=request.data)
+            organiser = event.organiser_user
             request.data['pk'] = event.pk
             request.data.pop('organiser_user_id')
             for coach in request.user.organiser.favourites.all():
                 if coach.email in approved_emails:
                     send_mail(
                         'New Job Offer',
-                        'An organiser wants you to take a look at this opportunity.',
+                        'An organiser wants you to take a look at a potential opportunity. \n' +
+                        f'{organiser.first_name} {organiser.last_name} would like to invite you to ' +
+                        f'apply for {event.name}, on {event.date}, at {event.location}.\n' + 
+                        'To get more information or to apply for this opportunity open KeepPlaying.' +
+                        '\n\n Best, \n Keep Playing Team',
                         'drp@keep_playing.com',
                         [coach.email],
                         fail_silently=False,
@@ -94,7 +99,8 @@ class AcceptOfferView(APIView):
             if event.coach_user.email in approved_emails:
                 send_mail(
                     'Your offer has been accepted!',
-                    f'You have been accepted for {event.name}, on {event.date}. Open Keep Playing for more details.',
+                    f'You have been accepted for {event.name}, on {event.date}, at {event.location}. Open Keep Playing for more details.\n' +
+                    '\n\n Best, \n Keep Playing Team',
                     'drp@keep_playing.com',
                     [event.coach_user.email],
                     fail_silently=False,
@@ -129,7 +135,8 @@ class CoachCancelEventView(APIView):
                     f'A {event.role} has cancelled!',
                     f'The {event.role} for {event.name}, on {event.date} has cancelled. ' + 
                     'Don\'t worry! We have already triggered another search. ' + 
-                    'Open Keep Playing for more details.',
+                    'Open Keep Playing for more details.' +
+                    '\n\n Best, \n Keep Playing Team',
                     'drp@keep_playing.com',
                     [event.organiser_user.email],
                     fail_silently=False,
@@ -168,7 +175,9 @@ class CoachEventView(APIView):
             if event.organiser_user.email in approved_emails:
                 send_mail(
                     f'Offer received for {event.name}, on {event.date}',
-                    'You received a new offer. Open application to view and accept it.',
+                    f'You received a new offer from {request.user.first_name} {request.user.last_name}. ' +
+                    'To get more information or to accept this offer open KeepPlaying.' +
+                    '\n\n Best, \n Keep Playing Team',
                     'drp@keep_playing.com',
                     [event.organiser_user.email],
                     fail_silently=False,
