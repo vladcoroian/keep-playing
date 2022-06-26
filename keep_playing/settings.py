@@ -151,9 +151,9 @@ EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
 EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', '')
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
-STATIC_URL = '/assets/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+# STATIC_URL = '/assets/'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 USE_S3 = os.getenv('USE_S3') == 'TRUE'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' 
