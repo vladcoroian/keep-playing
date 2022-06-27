@@ -178,6 +178,16 @@ class CoachUnapplyView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
+class CoachOrganiserView(APIView):
+    def get(self, request, pk, format=None):
+        user = User.objects.get(pk=pk)
+        serializer = UserSerializer(user, many=False)
+        return Response(
+            serializer.data,
+            status=status.HTTP_202_ACCEPTED
+        )
+
 class CoachEventView(APIView):
     def get(self, request, pk, format=None):
         user = User.objects.get(pk=pk)

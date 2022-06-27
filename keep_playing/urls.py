@@ -16,6 +16,7 @@ urlpatterns = [
     path('coach/events/<int:pk>/unapply/', views.CoachUnapplyView.as_view(), name='unapply'),
     path('coach/events/<int:pk>/cancel/', views.CoachCancelEventView.as_view(), name='cancel'),
     path('coach/<int:pk>/', views.CoachEventView.as_view(), name='coach'),
+    path('organiser/<int:pk>/', views.CoachOrganiserView.as_view(), name='organiser_view'),
     path('organiser/', views.OrganiserView.as_view(), name='organiser'),
     path('organiser/events/', views.EventView.as_view(), name='events'),
     path('organiser/events/<int:pk>/', views.EventView.as_view(), name='events'),
