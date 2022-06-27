@@ -129,6 +129,7 @@ class EventSerializer(serializers.ModelSerializer):
                 'recurring',
                 'recurring_end_date',
                 'offers',
+                'organiser_user',
                 'organiser_user_id',
                 'creation_started',
                 'creation_ended',
