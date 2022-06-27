@@ -127,10 +127,11 @@ class OrganiserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         favourites = validated_data.pop("favourites_ids", None)
-        if favourites:
+        print(favourites)
+        if favourites != None:
             instance.favourites.set(favourites)
         blocked = validated_data.pop("blocked_ids", None)
-        if blocked:
+        if blocked != None:
             instance.blocked.set(blocked)
         instance.default_price = validated_data.get('default_price', instance.default_price)
         instance.default_sport = validated_data.get('default_sport', instance.default_sport)
