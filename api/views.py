@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 import io
 from urllib import response
-from .serializers import CoachSerializer, NewUserSerializer, OrganiserSerializer, UserSerializer, EventSerializer
+from .serializers import CoachSerializer, NewOrganiserUserSerializer, NewCoachUserSerializer, OrganiserSerializer, UserSerializer, EventSerializer
 from django.http import StreamingHttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -426,9 +426,23 @@ class ExportDocx(APIView):
         return response
 
 
-class CreateUser(APIView):
+class CreateCoachUser(APIView):
     def post(self, request, format=None):
-        serializer = NewUserSerializer(data=request.data)
+        serializer = NewCoachUserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=ValueError):
+            serializer.create(validated_data=request.data)
+            return Response({"message": "test"})
+        return Response(
+            {
+                "error": True,
+                "error_msg": serializer.error_messages,
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class CreateOrganiserUser(APIView):
+    def post(self, request, format=None):
+        serializer = NewOrganiserUserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=ValueError):
             serializer.create(validated_data=request.data)
             return Response({"message": "test"})

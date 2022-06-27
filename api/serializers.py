@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ]
 
-class NewUserSerializer(serializers.ModelSerializer):
+class NewCoachUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(username=validated_data['username'], 
@@ -42,6 +42,28 @@ class NewUserSerializer(serializers.ModelSerializer):
         user.is_coach=True
         coach = Coach.objects.create(user=user)
         coach.save()
+        user.save()
+        return user
+
+    class Meta:
+        model = User
+        fields = (
+            'pk',
+            'username',
+            'password',
+            'qualification'
+        )
+        validators = []
+        
+class NewOrganiserUserSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        user = User.objects.create_user(username=validated_data['username'], 
+            password=validated_data['password'])
+        user.qualification=validated_data['qualification']
+        user.is_organiser=True
+        organiser = Organiser.objects.create(user=user)
+        organiser.save()
         user.save()
         return user
 
