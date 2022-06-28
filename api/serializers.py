@@ -136,9 +136,6 @@ class EventSerializer(serializers.ModelSerializer):
         validators = []
 
 class CoachEventSerializer(serializers.ModelSerializer):
-    organiser_user_id = serializers.PrimaryKeyRelatedField(
-        many=False, write_only=True, queryset=User.objects.all()
-    )
 
     def create(self, validated_data):
         event = Event.objects.create(**validated_data)
@@ -186,8 +183,7 @@ class CoachEventSerializer(serializers.ModelSerializer):
                 'recurring',
                 'recurring_end_date',
                 'offers',
-                'organiser_user'
-                'organiser_user_id',
+                'organiser_user',
                 'creation_started',
                 'creation_ended',
                 'voted']
