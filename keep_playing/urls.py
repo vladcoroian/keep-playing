@@ -32,6 +32,7 @@ urlpatterns = [
     path('organiser/coach-model/<int:coach_pk>/', views.CoachModelView.as_view(), name='coach_model'),
     path('new_coach/', views.CreateCoachUser.as_view(), name='new_coach'),
     path('new_organiser/', views.CreateOrganiserUser.as_view(), name='new_organiser'),
+    path('event/<int:pk>/organiser/', views.EventGetOrganiserView.as_view(), name='organiser_for_event'),
     path('login/', obtain_auth_token, name='login'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
