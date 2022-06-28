@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 import io
 from urllib import response
-from .serializers import CoachSerializer, NewOrganiserUserSerializer, NewCoachUserSerializer, OrganiserSerializer, UserSerializer, EventSerializer
+from .serializers import CoachEventSerializer, CoachSerializer, NewOrganiserUserSerializer, NewCoachUserSerializer, OrganiserSerializer, UserSerializer, EventSerializer
 from django.http import StreamingHttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -351,7 +351,7 @@ class CoachFeedView(APIView):
         for e in all_events:
             if not e.organiser_user.organiser.blocked.contains(self.request.user):
                 valid_events.append(e)
-        serializer = EventSerializer(valid_events, many=True)
+        serializer = CoachEventSerializer(valid_events, many=True)
         return Response(serializer.data)
 
 
@@ -360,7 +360,7 @@ class CoachUpcomingJobsView(APIView):
         now = datetime.now()
         events = Event.objects.filter(coach_user=request.user).filter(
             date__gte=now).order_by('date')
-        serializer = EventSerializer(events, many=True)
+        serializer = CoachEventSerializer(events, many=True)
         return Response(serializer.data)
       
 class VoteCoachView(APIView):
